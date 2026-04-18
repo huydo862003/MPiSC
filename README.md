@@ -1,6 +1,7 @@
 # Non-Blocking Distributed MPSC Queues
 
 ![MPiSC](https://img.shields.io/badge/MPiSC-blue?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6TTIgMTdsMTAgNSAxMC01TTIgMTJsMTAgNSAxMC01Ii8+PC9zdmc+) ![Status](https://img.shields.io/badge/status-complete-brightgreen) [![Thesis](https://img.shields.io/badge/thesis-h--dna.github.io-informational)](https://h-dna.github.io/MPiSC/)
+<a href="https://github.com/huydo862003/Fck-AI-Slop#plan"><img src="https://img.shields.io/badge/human%20slop-90EE90"></a>
 
 ## Table of Contents
 
@@ -12,13 +13,13 @@
 
 ## Abstract
 
-Distributed applications such as the actor model and fan-out/fan-in pattern require MPSC queues that are both performant and fault-tolerant. We address the absence of non-blocking distributed MPSC queues by adapting LTQueue — a wait-free shared-memory MPSC queue — to distributed environments using MPI-3 RMA. We introduce three novel **wait-free** distributed MPSC queues: **dLTQueue**, **Slotqueue**, and **dLTQueueV2**. Evaluation on SuperMUC-NG and CoolMUC-4 shows ~2x better enqueue throughput than the existing AMQueue while providing stronger fault tolerance.
+Distributed applications such as the actor model and fan-out/fan-in pattern require MPSC queues that are both performant and fault-tolerant. We address the absence of non-blocking distributed MPSC queues by adapting LTQueue, a wait-free shared-memory MPSC queue, to distributed environments using MPI-3 RMA. We introduce three novel **wait-free** distributed MPSC queues: **dLTQueue**, **Slotqueue**, and **dLTQueueV2**. Evaluation on SuperMUC-NG and CoolMUC-4 shows ~2x better enqueue throughput than the existing AMQueue while providing stronger fault tolerance.
 
 ## Motivation and Methodology
 
 ### The Problem
 
-MPSC queues are essential for **irregular applications** — programs with unpredictable, data-dependent memory access patterns:
+MPSC queues are essential for **irregular applications**: programs with unpredictable, data-dependent memory access patterns:
 
 - **Actor model**: Each actor maintains a mailbox (MPSC queue) receiving messages from other actors
 - **Fan-out/fan-in**: Worker nodes enqueue results to an aggregation node for processing
@@ -32,15 +33,15 @@ These patterns demand queues that are both performant and fault-tolerant. A slow
 | Queue | Issue |
 |-------|-------|
 | DQueue | Incorrect ABA solution and unsafe memory reclamation |
-| WRLQueue | Actually **blocking** — dequeuer waits for all enqueuers |
+| WRLQueue | Actually **blocking** - dequeuer waits for all enqueuers |
 | Jiffy | Insufficient memory reclamation, not truly wait-free |
-| **LTQueue** | **Correct** — uses LL/SC for ABA, proper memory reclamation |
+| **LTQueue** | **Correct** - uses LL/SC for ABA, proper memory reclamation |
 
-**Distributed** has only one MPSC queue: **AMQueue**. Despite claiming lock-freedom, it is actually **blocking** — the dequeuer must wait for all enqueuers to finish. A single slow enqueuer halts the entire system. ([Confirmed by the original author](assets/amqueue-blocking-evidence.jpg))
+**Distributed** has only one MPSC queue: **AMQueue**. Despite claiming lock-freedom, it is actually **blocking** - the dequeuer must wait for all enqueuers to finish. A single slow enqueuer halts the entire system. ([Confirmed by the original author](assets/amqueue-blocking-evidence.jpg))
 
 ### Our Approach
 
-We adapt **LTQueue** — the only correct shared-memory MPSC queue — to distributed environments using MPI-3 RMA one-sided communication.
+We adapt **LTQueue**, the only correct shared-memory MPSC queue, to distributed environments using MPI-3 RMA one-sided communication.
 
 **Key challenge**: LTQueue relies on LL/SC (Load-Link/Store-Conditional) to solve the ABA problem, but LL/SC is unavailable in MPI.
 
