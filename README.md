@@ -87,4 +87,4 @@ Benchmarked on [SuperMUC-NG](https://doku.lrz.de/supermuc-ng-10745965.html) (600
 1. **dLTQueue** - FDSE 2025 ([ResearchGate](https://www.researchgate.net/publication/395381301_dLTQueue_A_Non-Blocking_Distributed-Memory_Multi-Producer_Single-Consumer_Queue))
 2. **Slotqueue** - NPC 2025 ([ResearchGate](https://www.researchgate.net/publication/395448251_Slotqueue_A_Wait-Free_Distributed_Multi-Producer_Single-Consumer_Queue_with_Constant_Remote_Operations))
 
-[Full thesis](https://h-dna.github.io/MPiSC/)
+[Full thesis](https://huydo862003.github.io/MPiSC/)
