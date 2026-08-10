@@ -3,6 +3,8 @@
 ![MPiSC](https://img.shields.io/badge/MPiSC-blue?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAyTDIgN2wxMCA1IDEwLTV6TTIgMTdsMTAgNSAxMC01TTIgMTJsMTAgNSAxMC01Ii8+PC9zdmc+) ![Status](https://img.shields.io/badge/status-complete-brightgreen) [![Thesis](https://img.shields.io/badge/thesis-h--dna.github.io-informational)](https://h-dna.github.io/MPiSC/)
 <a href="https://github.com/huydo862003/Fck-AI-Slop#plan"><img src="https://img.shields.io/badge/human%20slop-90EE90"></a>
 
+> In hindsight, everything was a dream. I never thought I would have a chance to research something much in depth like this... Previously, I rage-quit my web-app thesis project. I thought it was over... Then, I managed to delve into one of the most intriguing stuffs I found in CS. I'm so grateful, even if there were so many things going on, and I'm not pursuing this direction anymore (but I'm pretty much interested in it)!
+
 ## Table of Contents
 
 - [Abstract](#abstract)
