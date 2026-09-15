@@ -8,9 +8,9 @@
   #if here().page() == 1 {
     return
   }
-  #box(image("/static/logo.png", height: 2.5em))
+  #box(baseline: 40%, image("/static/logo.png", height: 2.5em))
   #h(0.5cm)
-  #box[
+  #box(baseline: 40%)[
     HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY\
     FACULTY OF COMPUTER SCIENCE AND ENGINEERING
   ]
