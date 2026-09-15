@@ -8,11 +8,12 @@
   #if here().page() == 1 {
     return
   }
-  #box(baseline: 40%, image("/static/logo.png", height: 2.5em))
-  #h(0.5cm)
-  #box(baseline: 40%)[
-    HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY\
-    FACULTY OF COMPUTER SCIENCE AND ENGINEERING
-  ]
-  #h(1fr)
+  #grid(
+    columns: (auto, 1fr),
+    column-gutter: 0.5cm,
+    align: horizon,
+    image("/static/logo.png", height: 2.5em),
+    [HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY\
+     FACULTY OF COMPUTER SCIENCE AND ENGINEERING],
+  )
 ]

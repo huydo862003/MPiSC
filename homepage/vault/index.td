@@ -16,7 +16,7 @@ Evaluation on SuperMUC-NG and CoolMUC-4 shows ~2x better enqueue throughput than
 
 ## Motivation
 
-MPSC queues are essential for **irregular applications**: programs with unpredictable, data-dependent memory access patterns:
+The demand for computation power has been increasing relentlessly. To harness the power of distributed systems, specialized algorithms and data structures need to be devised. Two especially important properties are performance and fault tolerance. MPSC queues are essential for **irregular applications** - programs with unpredictable, data-dependent memory access patterns:
 
 - **Actor model**: Each actor maintains a mailbox (MPSC queue) receiving messages from other actors
 - **Fan-out/fan-in**: Worker nodes enqueue results to an aggregation node for processing
@@ -25,7 +25,7 @@ These patterns demand queues that are both performant and fault-tolerant. A slow
 
 ## Gap in the Literature
 
-**Shared-memory** has several non-blocking MPSC queues: LTQueue, DQueue, WRLQueue, and Jiffy. However, our analysis reveals critical flaws in most:
+We survey existing non-blocking MPSC queues in both the shared-memory and distributed domains. The **shared-memory** domain has several non-blocking MPSC queues: LTQueue, DQueue, WRLQueue, and Jiffy. However, our analysis reveals critical flaws in most:
 
 | Queue | Issue |
 | --- | --- |
@@ -34,11 +34,11 @@ These patterns demand queues that are both performant and fault-tolerant. A slow
 | Jiffy | Insufficient memory reclamation, not truly wait-free |
 | **LTQueue** | **Correct** - uses LL/SC for ABA, proper memory reclamation |
 
-**Distributed** has only one MPSC queue: **AMQueue**. Despite claiming lock-freedom, it is actually **blocking** - the dequeuer must wait for all enqueuers to finish.
+The **distributed** domain has only one MPSC queue: **AMQueue**. Despite claiming lock-freedom, it is actually **blocking** - the dequeuer must wait for all enqueuers to finish.
 
 ## Our Approach
 
-We adapt **LTQueue**, the only correct shared-memory MPSC queue, to distributed environments using MPI-3 RMA one-sided communication.
+Based on the survey, we adapt **LTQueue**, the only correct shared-memory MPSC queue, to distributed environments using MPI-3 RMA one-sided communication.
 
 **Key challenge**: LTQueue relies on LL/SC (Load-Link/Store-Conditional) to solve the ABA problem, but LL/SC is unavailable in MPI.
 
@@ -51,6 +51,8 @@ We adapt **LTQueue**, the only correct shared-memory MPSC queue, to distributed 
 
 ## Novel Algorithms
 
+This research makes two primary contributions: an application of a novel design technique for non-blocking distributed data structures via adaptation of non-blocking shared-memory data structures, and three novel wait-free distributed MPSC queues:
+
 | Algorithm | Progress | Enqueue | Dequeue |
 | --- | --- | --- | --- |
 | **dLTQueue** | Wait-free | $O(\log n)$ remote | $O(\log n)$ remote |
@@ -61,7 +63,7 @@ All algorithms are **linearizable** with no dynamic memory allocation.
 
 ## Results
 
-Benchmarked on [SuperMUC-NG](https://doku.lrz.de/supermuc-ng-10745965.html) (6000+ nodes) and [CoolMUC-4](https://doku.lrz.de/coolmuc-4-10746415.html) (100+ nodes):
+We benchmark our algorithms on [SuperMUC-NG](https://doku.lrz.de/supermuc-ng-10745965.html) (6000+ nodes) and [CoolMUC-4](https://doku.lrz.de/coolmuc-4-10746415.html) (100+ nodes), compared against the existing AMQueue:
 
 | Metric | Our Queues vs AMQueue |
 | --- | --- |
