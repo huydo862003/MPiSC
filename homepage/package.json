@@ -3,13 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@11.18.0",
   "scripts": {
     "dev": "typerighter dev",
     "build": "typerighter build",
     "preview": "typerighter preview"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": ["@typerighter/rpc-server"]
   },
   "devDependencies": {
     "typerighter": "0.32.6"
