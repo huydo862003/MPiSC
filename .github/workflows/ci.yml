@@ -43,8 +43,9 @@ jobs:
           TYPST_CHANGES=$(echo "$CHANGED_FILES" | grep -E '\.typ(st)?$' || true)
           README_CHANGES=$(echo "$CHANGED_FILES" | grep -E 'README\.md$' || true)
           ASSETS_CHANGES=$(echo "$CHANGED_FILES" | grep -E 'assets/' || true)
-    
-          if [ -n "$TYPST_CHANGES" ] || [ -n "$README_CHANGES" ] || [ -n "$ASSETS_CHANGES" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          HOMEPAGE_CHANGES=$(echo "$CHANGED_FILES" | grep -E '^homepage/' || true)
+
+          if [ -n "$TYPST_CHANGES" ] || [ -n "$README_CHANGES" ] || [ -n "$ASSETS_CHANGES" ] || [ -n "$HOMEPAGE_CHANGES" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "should_build=true" >> $GITHUB_OUTPUT
             echo "Changes detected in Typst files or README.md, proceeding with build"
           else
@@ -63,11 +64,6 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history for git log commands
 
-      - name: Install packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y poppler-utils
-
       - name: Setup Typst
         uses: typst-community/setup-typst@v3
         with:
@@ -79,11 +75,6 @@ jobs:
           echo "TYPST_DIRS=$(find . -name "main.typst" -o -name "main.typ" | xargs dirname | tr '\n' ' ')" >> $GITHUB_ENV
           mkdir -p build
 
-      - name: Copy assets
-        id: copy_assets
-        run: |
-          cp -r ./assets ./build
-          
       - name: Build PDFs from Typst projects
         run: |
           # Create a file to store modification dates
@@ -121,81 +112,40 @@ jobs:
             fi
           done
       
-      - name: Generate Enhanced README
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Build homepage
+        working-directory: homepage
         run: |
-          # Create header with site info
-          if [ -f "README.md" ]; then
-            echo "$(head -n 1 README.md)" >> build/README.md
-          fi
-          cat > build/README.md << 'EOF'
+          pnpm install
+          pnpm build
 
-          <div align="center">
-            <h3>Automatically Generated PDF Documents</h3>
-            <p>
-              <em>This site hosts the compiled PDF files from the Typst project source files of <a href="https://github.com/Huy-DNA/MPiSC/tree/main">MPiSC</a>.</em>
-            </p>
-          </div>
+      - name: Assemble deploy folder
+        run: |
+          cp -r homepage/dist deploy
+          # Copy built PDFs into the deploy folder
+          for dir in $TYPST_DIRS; do
+            rel_dir="${dir#./}"
+            if [ -f "build/$rel_dir/main.pdf" ]; then
+              mkdir -p "deploy/$rel_dir"
+              cp "build/$rel_dir/main.pdf" "deploy/$rel_dir/main.pdf"
+            fi
+          done
+          # Copy assets
+          cp -r ./assets ./deploy/assets
 
-          ---
-
-          ## 📄 Available Documents
-          
-          <table>
-            <thead>
-              <tr>
-                <th align="left">Document</th>
-                <th align="left">Last Content Update</th>
-                <th align="center">View</th>
-                <th align="center">Download</th>
-              </tr>
-            </thead>
-            <tbody>
-          EOF
-          
-          # Add table rows for each PDF
-          while IFS="|" read -r file_path last_mod_date; do
-            pdf_name=$(pdfinfo "build/$file_path" | grep "Title")
-            pdf_name=${pdf_name:6}
-            echo "      <tr>" >> build/README.md
-            echo "        <td><strong>$pdf_name</strong></td>" >> build/README.md
-            echo "        <td>$last_mod_date</td>" >> build/README.md
-            echo "        <td align=\"center\"><a href=\"$file_path\">📕 View</a></td>" >> build/README.md
-            echo "        <td align=\"center\"><a href=\"$file_path\" download>⬇️ PDF</a></td>" >> build/README.md
-            echo "      </tr>" >> build/README.md
-          done < modification_dates.txt
-          
-          # Close the table
-          echo "    </tbody>" >> build/README.md
-          echo "  </table>" >> build/README.md
-          echo "" >> build/README.md
-          
-          # Add original README content if it exists
-          echo "## 📝 Project Information" >> build/README.md
-          echo "" >> build/README.md
-          
-          if [ -f "README.md" ]; then
-            echo "" >> build/README.md
-            cat README.md | tail -n +2 | sed -E 's/^(#+)/\1#/' >> build/README.md
-            echo "" >> build/README.md
-          fi
-
-          # Add footer with build info
-          cat >> build/README.md << EOF
-          
-          ---
-          
-          <div align="center">
-            <p>
-              <small>Last build: $(date)</small><br>
-              <small>Generated by GitHub Actions • <a href="https://github.com/${GITHUB_REPOSITORY}/tree/main">View Source</a></small>
-            </p>
-          </div>
-          EOF
-      
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build
+          folder: deploy
           branch: gh-pages
           clean: true
-          commit-message: "Deploy Typst PDFs to GitHub Pages [skip ci]"
+          commit-message: "Deploy homepage to GitHub Pages [skip ci]"

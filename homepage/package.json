@@ -1,0 +1,14 @@
+{
+  "name": "@mpisc/homepage",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "typerighter dev",
+    "build": "typerighter build",
+    "preview": "typerighter preview"
+  },
+  "devDependencies": {
+    "typerighter": "latest"
+  }
+}

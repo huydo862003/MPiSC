@@ -1,0 +1,8 @@
+version: "1.0.0"
+vault:
+  root_dir: "vault"
+repo: "https://github.com/Huy-DNA/MPiSC"
+site:
+  title: "MPiSC"
+  description: "Non-Blocking Distributed MPSC Queues"
+  base_path: "/MPiSC"
