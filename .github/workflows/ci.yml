@@ -44,8 +44,9 @@ jobs:
           README_CHANGES=$(echo "$CHANGED_FILES" | grep -E 'README\.md$' || true)
           ASSETS_CHANGES=$(echo "$CHANGED_FILES" | grep -E 'assets/' || true)
           HOMEPAGE_CHANGES=$(echo "$CHANGED_FILES" | grep -E '^homepage/' || true)
+          CI_CHANGES=$(echo "$CHANGED_FILES" | grep -E '^\.github/' || true)
 
-          if [ -n "$TYPST_CHANGES" ] || [ -n "$README_CHANGES" ] || [ -n "$ASSETS_CHANGES" ] || [ -n "$HOMEPAGE_CHANGES" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          if [ -n "$TYPST_CHANGES" ] || [ -n "$README_CHANGES" ] || [ -n "$ASSETS_CHANGES" ] || [ -n "$HOMEPAGE_CHANGES" ] || [ -n "$CI_CHANGES" ] || [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "should_build=true" >> $GITHUB_OUTPUT
             echo "Changes detected in Typst files or README.md, proceeding with build"
           else
