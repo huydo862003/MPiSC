@@ -4,6 +4,7 @@ target/
 out
 bin/
 obj/
+*/node_modules/
 
 CMakeFiles/
 CMakeCache.txt

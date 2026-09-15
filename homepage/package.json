@@ -8,7 +8,10 @@
     "build": "typerighter build",
     "preview": "typerighter preview"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@typerighter/rpc-server"]
+  },
   "devDependencies": {
-    "typerighter": "latest"
+    "typerighter": "0.32.6"
   }
 }
