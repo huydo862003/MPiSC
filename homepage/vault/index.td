@@ -3,11 +3,11 @@ _label: "Non-Blocking Distributed MPSC Queues"
 description: "Wait-free distributed MPSC queues using MPI-3 RMA"
 ---
 
+[Full thesis (PDF)](report/main.pdf)
+
 Distributed applications such as the actor model and fan-out/fan-in pattern require MPSC queues that are both performant and fault-tolerant. We address the absence of non-blocking distributed MPSC queues by adapting LTQueue, a wait-free shared-memory MPSC queue, to distributed environments using MPI-3 RMA. We introduce three novel **wait-free** distributed MPSC queues: **dLTQueue**, **Slotqueue**, and **dLTQueueV2**.
 
 Evaluation on SuperMUC-NG and CoolMUC-4 shows ~2x better enqueue throughput than the existing AMQueue while providing stronger fault tolerance.
-
-[Full thesis (PDF)](report/main.pdf)
 
 ## Publications
 
@@ -45,6 +45,7 @@ Based on the survey, we adapt **LTQueue**, the only correct shared-memory MPSC q
 **Our solution**: Replace LL/SC with CAS + unique timestamps. Each value is tagged with a monotonically increasing version number, preventing ABA without LL/SC.
 
 **Key techniques**:
+
 - **SPSC-per-enqueuer**: Each producer maintains a local queue, eliminating producer contention
 - **Unique timestamps**: Solves ABA via monotonic version numbers
 - **Double-refresh**: Bounds retries to two per node, ensuring wait-freedom
@@ -72,21 +73,3 @@ We benchmark our algorithms on [SuperMUC-NG](https://doku.lrz.de/supermuc-ng-107
 | Fault tolerance | **Wait-free** (vs blocking) |
 
 **Trade-off**: Stronger fault tolerance at the cost of dequeue performance.
-
-### Enqueue throughput
-
-![SuperMUC-NG enqueue throughput](images/sm/enqueue_throughput_comparison.png)
-
-![CoolMUC-4 enqueue throughput](images/cm4/enqueue_throughput_comparison.png)
-
-### Dequeue throughput
-
-![SuperMUC-NG dequeue throughput](images/sm/dequeue_throughput_comparison.png)
-
-![CoolMUC-4 dequeue throughput](images/cm4/dequeue_throughput_comparison.png)
-
-### Total throughput
-
-![SuperMUC-NG total throughput](images/sm/total_throughput_comparison.png)
-
-![CoolMUC-4 total throughput](images/cm4/total_throughput_comparison.png)
