@@ -1,0 +1,95 @@
+{
+  "directory-index": {
+    "source": "typerighter/src/client/theme-default/components/custom/TdDirectoryIndex.vue"
+  },
+  "flashcard": {
+    "source": "typerighter/src/client/theme-default/components/custom/TdFlashcard.vue",
+    "props": {
+      "id": {
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": "HTML id attribute"
+      },
+      "revealed": {
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "description": "Start with the key side showing"
+      },
+      "disabled": {
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "description": "Disable flipping interaction"
+      },
+      "questionLabel": {
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": "Caption shown above the question"
+      },
+      "keyLabel": {
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": "Caption shown above the key"
+      }
+    },
+    "slots": [
+      "key"
+    ]
+  },
+  "toc": {
+    "source": "typerighter/src/client/theme-default/components/custom/TdToc.vue",
+    "props": {
+      "static": {
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "description": "Disable active heading tracking on scroll"
+      }
+    }
+  },
+  "glossary-index": {
+    "source": "typerighter/src/client/theme-default/components/custom/glossary/TdGlossaryIndex.vue"
+  },
+  "glossary-row": {
+    "source": "typerighter/src/client/theme-default/components/custom/glossary/TdGlossaryRow.vue",
+    "props": {
+      "href": {
+        "schema": {
+          "type": "string"
+        },
+        "description": "Resolved link href"
+      },
+      "showTags": {
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "description": "Whether to show tags"
+      }
+    }
+  }
+}
