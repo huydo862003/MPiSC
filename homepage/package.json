@@ -10,6 +10,6 @@
     "preview": "typerighter preview"
   },
   "devDependencies": {
-    "typerighter": "0.55.0"
+    "typerighter": "0.55.2"
   }
 }
